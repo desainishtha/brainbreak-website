@@ -173,4 +173,68 @@ function suggestBreak() {
     <h3>Suggested Break</h3>
     <p>${activity}</p>
   `;
+  async function sendChatMessage() {
+  const chatInput = document.getElementById("chatInput");
+  const chatMessages = document.getElementById("chatMessages");
+
+  const message = chatInput.value.trim();
+
+  if (message === "") {
+    alert("Please type a message first.");
+    return;
+  }
+
+  chatMessages.innerHTML += `
+    <div class="user-message">${escapeHTML(message)}</div>
+  `;
+
+  chatInput.value = "";
+
+  const loadingId = "loading-" + Date.now();
+
+  chatMessages.innerHTML += `
+    <div id="${loadingId}" class="bot-message loading-message">BrainBreak Coach is thinking...</div>
+  `;
+
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: message,
+        tasks: tasks,
+        breakActivities: breakActivities
+      })
+    });
+
+    const data = await response.json();
+
+    const loadingMessage = document.getElementById(loadingId);
+
+    if (!response.ok) {
+      loadingMessage.textContent = data.error || "Something went wrong.";
+      return;
+    }
+
+    loadingMessage.classList.remove("loading-message");
+    loadingMessage.innerHTML = escapeHTML(data.reply).replace(/\n/g, "<br>");
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  } catch (error) {
+    const loadingMessage = document.getElementById(loadingId);
+    loadingMessage.textContent = "Could not connect to the AI coach. Make sure the site is deployed on Vercel, not only opened as a local file.";
+  }
+}
+
+function escapeHTML(text) {
+  return text
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 }

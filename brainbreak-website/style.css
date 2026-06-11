@@ -303,4 +303,77 @@ select:focus {
   #timerDisplay {
     font-size: 58px;
   }
+
+  .small-text {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.suggestion-card {
+  background: linear-gradient(135deg, #eef2ff, #ecfeff);
+  border: 1px solid #c7d2fe;
+  padding: 20px;
+  border-radius: 18px;
+  margin-top: 12px;
+}
+
+.suggestion-card h4 {
+  margin-top: 0;
+  color: #4f46e5;
+  font-size: 22px;
+}
+
+.suggestion-card p {
+  color: #334155;
+  line-height: 1.6;
+}
+
+.suggestion-tag {
+  display: inline-block;
+  background: #4f46e5;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  margin-top: 8px;
+  margin-right: 6px;
+}
+
+.small-text {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.suggestion-card {
+  background: linear-gradient(135deg, #eef2ff, #ecfeff);
+  border: 1px solid #c7d2fe;
+  padding: 20px;
+  border-radius: 18px;
+  margin-top: 12px;
+}
+
+.suggestion-card h4 {
+  margin-top: 0;
+  color: #4f46e5;
+  font-size: 22px;
+}
+
+.suggestion-card p {
+  color: #334155;
+  line-height: 1.6;
+}
+
+.suggestion-tag {
+  display: inline-block;
+  background: #4f46e5;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  margin-top: 8px;
+  margin-right: 6px;
+}
+
 }
