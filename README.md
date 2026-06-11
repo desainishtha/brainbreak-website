@@ -1,131 +1,200 @@
-# brainbreak-website
 # BrainBreak
+
+BrainBreak is a student productivity and burnout-prevention web app designed to help students organize assignments, plan study sessions, take healthier breaks, and manage schoolwork without feeling overwhelmed.
 
 ## Overview
 
-**BrainBreak** is a student-focused productivity and wellness website designed to help students organize their schoolwork while also preventing burnout.
+Many students struggle with procrastination, stress, screen fatigue, and burnout when completing homework or studying for long periods of time. BrainBreak helps solve this problem by combining task planning, focus timers, personalized breaks, and a supportive study coach in one simple app.
 
-Many students use apps and settings to avoid distractions, but there are not many tools that actively remind students to take healthy breaks before they become mentally exhausted. BrainBreak helps solve this problem by combining task planning, study organization, focus timing, and personalized break suggestions in one simple website.
+BrainBreak is built as a front-end web app using HTML, CSS, and JavaScript.
 
-The goal of BrainBreak is to help students study smarter, manage assignments more clearly, and take meaningful breaks at the right time.
+## Purpose
 
----
+BrainBreak is not just a regular to-do list. Its goal is to help students study in a healthier way by reminding them to take breaks before they burn out.
 
-## Problem BrainBreak Solves
+The app helps students:
 
-Students often keep working for long periods without stopping, especially when they have multiple assignments, tests, projects, and extracurricular responsibilities. This can lead to stress, exhaustion, procrastination, and burnout.
-
-BrainBreak helps students by:
-
-* Organizing assignments and tasks in one place
-* Helping students decide what to work on first
-* Encouraging breaks before burnout happens
-* Suggesting break activities based on what the student can actually do
-* Providing a focus timer to support healthier study sessions
-
----
+* organize assignments by priority
+* plan what to work on first
+* use focus timers based on their tasks
+* take breaks based on assignment type
+* avoid too much screen time
+* create smaller to-do lists
+* save basic profile and study settings
+* personalize the look of the app
 
 ## Current Features
 
-### 1. Homepage
+### Smart Task Planning
 
-The homepage introduces the purpose of BrainBreak and explains the main features of the website.
+Students can add school assignments with:
 
-### 2. Task Input
+* task name
+* class name
+* estimated time
+* priority level
+* assignment type
 
-Students can add school-related tasks by entering:
+Assignment types include:
 
-* Task name
-* Class or subject
-* Estimated time needed
-* Priority level
+* online / screen-based
+* paper / offline
+* mixed
 
-### 3. Break Preferences
+BrainBreak uses this information to help decide what the student should work on first.
 
-Students can add break activities that are realistic and accessible for them.
+### Study Plan Generator
 
-Examples include:
+BrainBreak creates a recommended study order based on task priority. High-priority tasks are shown first so students can focus on the most important work before moving to easier tasks.
 
-* Go outside
-* Stretch
-* Get a snack
-* Drink water
-* Take a short walk
-* Play basketball
-* Rest your eyes
+### Focus Timer
 
-### 4. Study Plan Generator
+The focus timer is based on the highest-priority task in the student’s list. BrainBreak chooses a focus session length and recommended break length based on the task’s priority and estimated time.
 
-BrainBreak creates a recommended study order based on task priority.
+For example, a longer high-priority task may get a longer focus session and a longer break, while a shorter low-priority task may get a shorter session.
 
-This helps students avoid feeling overwhelmed and gives them a clear starting point.
+### Smart Break Suggestions
 
-### 5. Focus Timer
+BrainBreak suggests break ideas based on the student’s break preferences, energy level, location, and assignment type.
 
-The website includes a focus timer that students can use during study sessions.
+The app also considers whether the student was working online or on paper:
 
-When the timer ends, BrainBreak suggests a break activity.
+* If the assignment is online, BrainBreak recommends offline breaks to reduce screen fatigue.
+* If the assignment is on paper, a short online break may be allowed with a timer.
+* If the assignment is mixed, BrainBreak encourages an offline break first.
 
----
+### BrainBreak Coach
 
-## Why This Project Matters
+BrainBreak Coach is a simple built-in chatbot-style study helper. It can respond to common student situations such as:
 
-BrainBreak is not just a productivity tool. It is also a wellness tool.
+* feeling tired
+* feeling stressed
+* feeling overwhelmed
+* needing motivation
+* procrastinating
+* not knowing what to do first
+* wondering whether an online break is a good idea
 
-The purpose is to remind students that studying nonstop is not always effective. Healthy breaks can improve focus, reduce stress, and help students return to their work with more energy.
+The coach gives supportive, practical suggestions to help students reset and keep going.
 
-This project supports the idea that academic success should not come at the cost of mental health.
+### To-Do List
 
----
+BrainBreak includes a separate to-do list for smaller reminders or steps inside larger assignments.
 
-## How to Use the Website
+Students can:
 
-1. Open the BrainBreak website.
-2. Go to the **Add Tasks** section.
-3. Enter your assignments or study tasks.
-4. Go to the **Break Preferences** section.
-5. Add break activities that are accessible to you.
-6. Go to the **Study Plan** section.
-7. Generate a recommended task order.
-8. Use the **Focus Timer** while studying.
-9. When the timer ends, take the suggested break.
+* add to-do items
+* press Enter to add an item quickly
+* mark items complete
+* undo completed items
+* delete items
 
----
+The to-do list is saved in the browser using localStorage.
+
+### Profile & Settings
+
+The Profile & Settings section allows students to personalize their BrainBreak experience.
+
+Students can save:
+
+* email for local sign-in
+* name
+* grade level
+* study goal
+* saved classes
+* preferred focus length
+* preferred break length
+* study style
+* app theme
+
+This information is saved locally in the browser.
+
+### Local Email Sign-In
+
+BrainBreak currently includes a simple local email sign-in feature. A student can enter their email, and the app will remember it on that device.
+
+This is not a real account login yet. It does not use a password or database. It is a local sign-in experience using browser storage.
+
+### Theme Customization
+
+Students can choose different app themes, including:
+
+* Calm Blue
+* Lavender Focus
+* Mint Energy
+* Sunset
+* Dark Mode
+
+The selected theme is saved after refresh.
+
+### Enter Key Shortcuts
+
+BrainBreak supports pressing Enter to quickly submit certain inputs, such as:
+
+* adding a task
+* adding a break activity
+* adding a class
+* signing in locally
+* adding a to-do item
+* sending a BrainBreak Coach message
 
 ## Technologies Used
-
-This project is built using:
 
 * HTML
 * CSS
 * JavaScript
+* LocalStorage
 * GitHub Pages
 
-No external libraries or frameworks are currently used.
+## How to Use
 
----
-
-## Future Improvements
-
-Future versions of BrainBreak may include:
-
-* Due dates for tasks
-* Difficulty levels for assignments
-* Smarter task ordering using more factors
-* Screenshot upload for to-do lists
-* AI-based task extraction from uploaded images
-* Custom focus and break timer lengths
-* Sound alarms for break reminders
-* Local storage so tasks stay saved after refreshing the page
-* User accounts
-* Better mobile design
-* Progress tracking
-* Burnout risk score
-
----
+1. Open the BrainBreak website.
+2. Go to Profile & Settings.
+3. Enter your email, profile information, classes, and study preferences.
+4. Add assignments in the Add Tasks section.
+5. Generate a study plan.
+6. Use the Focus Timer to begin studying.
+7. Take a recommended BrainBreak when the timer ends.
+8. Use BrainBreak Coach when you feel stuck, tired, or overwhelmed.
+9. Use the To-Do List for smaller checklist items.
 
 ## Project Status
 
-This is the first version of BrainBreak. The current version focuses on building the basic structure and core idea of the app.
+BrainBreak is currently a front-end prototype. It works in the browser and saves data locally using localStorage.
 
-The project will continue to improve step by step.
+Current version includes:
+
+* task management
+* study planning
+* smart break recommendations
+* focus timer
+* BrainBreak Coach
+* to-do list
+* profile and settings
+* local email sign-in
+* theme customization
+
+## Future Improvements
+
+Possible future features include:
+
+* real account sign-in with Firebase Authentication
+* saving data across multiple devices
+* Firestore database for user profiles and tasks
+* friend groups or study groups
+* rewards, points, and badges
+* leaderboards
+* calendar integration
+* image upload for handwritten to-do lists
+* AI-powered task extraction from uploaded images
+* real AI study coach
+* better mobile layout
+* notifications or alarm sounds for break reminders
+
+## Why BrainBreak Matters
+
+BrainBreak is designed to help students manage schoolwork in a healthier way. Instead of encouraging students to work nonstop, it helps them balance focus and rest.
+
+The main goal of BrainBreak is simple:
+
+Study smarter. Take better breaks. Prevent burnout.
