@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BrainBreak</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <h2>BrainBreak</h2>
+
+    <div class="nav-buttons">
+      <button onclick="showSection('home')">Home</button>
+      <button onclick="showSection('tasks')">Add Tasks</button>
+      <button onclick="showSection('todo')">To-Do List</button>
+      <button onclick="showSection('breaks')">Break Preferences</button>
+      <button onclick="showSection('plan')">Study Plan</button>
+      <button onclick="showSection('timer')">Focus Timer</button>
+      <button onclick="showSection('coach')">BrainBreak Coach</button>
+      <button onclick="showSection('settings')">Profile & Settings</button>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- HOME SECTION -->
+    <section id="home" class="page-section active">
+      <div class="hero">
+        <h1>🧠 BrainBreak</h1>
+        <p>Plan smarter. Study healthier. Take breaks before burnout.</p>
+        <button class="primary-button" onclick="showSection('tasks')">Start Planning</button>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>Smart Task Planning</h3>
+          <p>Organize assignments by priority, difficulty, and estimated time.</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Personalized Breaks</h3>
+          <p>Choose break activities that are realistic and accessible for you.</p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Loud Break Reminders</h3>
+          <p>Get reminded when it is time to stop studying and take a real break.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADD TASKS SECTION -->
+    <section id="tasks" class="page-section">
+      <h1>Add Tasks</h1>
+      <p>Enter your school assignments and tasks below.</p>
+
+      <div class="form-card">
+        <label>Task Name</label>
+        <input type="text" id="taskName" placeholder="Example: Math homework" />
+
+        <label>Class</label>
+        <input type="text" id="taskClass" placeholder="Example: Algebra 2" />
+
+        <label>Estimated Minutes</label>
+        <input type="number" id="taskMinutes" placeholder="Example: 45" />
+
+        <label>Priority</label>
+<select id="taskPriority">
+  <option value="High">High</option>
+  <option value="Medium">Medium</option>
+  <option value="Low">Low</option>
+</select>
+
+<label>Assignment Type</label>
+<select id="assignmentType">
+  <option value="online">Online / screen-based</option>
+  <option value="paper">Paper / offline</option>
+  <option value="mixed">Mixed</option>
+</select>
+
+<button onclick="addTask()">Add Task</button>
+      </div>
+
+      <div id="taskList" class="list-card">
+        <h3>Your Tasks</h3>
+        <p>No tasks added yet.</p>
+      </div>
+    </section>
+
+    <!-- BREAK PREFERENCES SECTION -->
+    <section id="breaks" class="page-section">
+      <h1>Break Preferences</h1>
+      <p>Add break activities that are easy for you to actually do. Then use the smart suggestion tool to get a personalized break idea.</p>
+
+      <div class="form-card">
+        <label>Break Activity</label>
+        <input type="text" id="breakActivity" placeholder="Example: Go outside, stretch, get a snack" />
+
+        <button onclick="addBreakActivity()">Add Break Activity</button>
+      </div>
+
+      <div id="breakList" class="list-card">
+        <h3>Your Break Activities</h3>
+        <p>No break activities added yet.</p>
+      </div>
+
+      <div class="form-card">
+        <h2>Smart Break Suggestion</h2>
+        <p class="small-text">Answer these questions and BrainBreak will suggest a break activity for you.</p>
+
+        <label>How much time do you have?</label>
+        <select id="breakTime">
+          <option value="short">Short break: 3–5 minutes</option>
+          <option value="medium">Medium break: 5–10 minutes</option>
+          <option value="long">Long break: 10–20 minutes</option>
+        </select>
+
+        <label>Where can you take your break?</label>
+        <select id="breakLocation">
+          <option value="indoor">Indoor</option>
+          <option value="outdoor">Outdoor</option>
+          <option value="either">Either indoor or outdoor</option>
+        </select>
+
+        <label>How is your energy right now?</label>
+        <select id="energyLevel">
+          <option value="tired">Tired</option>
+          <option value="restless">Restless</option>
+          <option value="stressed">Stressed</option>
+          <option value="normal">Normal</option>
+        </select>
+
+        <label>What kind of break do you want?</label>
+        <select id="breakType">
+          <option value="calm">Calming</option>
+          <option value="active">Active</option>
+          <option value="refreshing">Refreshing</option>
+          <option value="fun">Fun</option>
+        </select>
+
+        <button onclick="generateSmartBreak()">Suggest a Break</button>
+      </div>
+
+      <div id="smartBreakResult" class="list-card">
+        <h3>BrainBreak Suggestion</h3>
+        <p>Your personalized break suggestion will appear here.</p>
+      </div>
+    </section>
+
+    <!-- STUDY PLAN SECTION -->
+    <section id="plan" class="page-section">
+      <h1>Study Plan</h1>
+      <p>Generate a recommended order for your tasks.</p>
+
+      <button onclick="generatePlan()">Generate Study Plan</button>
+
+      <div id="studyPlan" class="list-card">
+        <h3>Recommended Study Order</h3>
+        <p>Your plan will appear here.</p>
+      </div>
+    </section>
+
+    <!-- FOCUS TIMER SECTION -->
+<section id="timer" class="page-section">
+  <h1>Focus Timer</h1>
+  <p>
+    BrainBreak chooses your focus time based on the highest-priority task in your task list.
+    When the timer ends, it recommends a break length.
+  </p>
+
+  <div class="timer-box">
+    <h3>Current Focus Task</h3>
+    <div id="currentFocusTask" class="focus-task-card">
+      <p>Add tasks first, then click “Prepare Focus Session.”</p>
+    </div>
+
+    <button onclick="prepareFocusSession()">Prepare Focus Session</button>
+
+    <h2 id="timerDisplay">25:00</h2>
+
+    <div class="timer-buttons">
+      <button onclick="startTimer()">Start Timer</button>
+      <button onclick="resetTimer()">Reset Timer</button>
+    </div>
+  </div>
+
+  <div id="breakSuggestion" class="list-card">
+    <h3>Break Suggestion</h3>
+    <p>Your suggested break will appear here.</p>
+  </div>
+</section>
+    <!-- BRAINBREAK COACH SECTION -->
+    <section id="coach" class="page-section">
+      <h1>BrainBreak Coach</h1>
+      <p>
+        Chat with BrainBreak Coach for help planning tasks, choosing breaks, getting unstuck, and avoiding burnout.
+      </p>
+
+      <div class="coach-layout">
+
+        <!-- LEFT PROMPT PANEL -->
+        <div class="coach-sidebar">
+
+          <div class="coach-side-card intro-card">
+            <h3>Quick Help</h3>
+            <p>Tap a prompt below to get instant support from your study coach.</p>
+          </div>
+
+          <div class="coach-side-card">
+            <h4>How are you feeling?</h4>
+            <div class="prompt-group">
+              <button onclick="useQuickPrompt('I feel tired')">😴 I feel tired</button>
+              <button onclick="useQuickPrompt('I feel stressed')">😣 I feel stressed</button>
+              <button onclick="useQuickPrompt('I feel overwhelmed')">🌪️ Overwhelmed</button>
+              <button onclick="useQuickPrompt('I feel unmotivated')">🪫 Unmotivated</button>
+            </div>
+          </div>
+
+          <div class="coach-side-card">
+            <h4>Planning Help</h4>
+            <div class="prompt-group">
+              <button onclick="useQuickPrompt('What should I do first?')">🎯 What first?</button>
+              <button onclick="useQuickPrompt('Help me start')">🚀 Help me start</button>
+              <button onclick="useQuickPrompt('Make me a study plan')">📝 Study plan</button>
+              <button onclick="useQuickPrompt('I have too much homework')">📚 Too much homework</button>
+            </div>
+          </div>
+
+          <div class="coach-side-card">
+            <h4>Break Help</h4>
+            <div class="prompt-group">
+              <button onclick="useQuickPrompt('Suggest a short break')">⏱️ Short break</button>
+              <button onclick="useQuickPrompt('Suggest a fun break')">🎵 Fun break</button>
+              <button onclick="useQuickPrompt('Can I take an online break?')">📱 Online break?</button>
+              <button onclick="useQuickPrompt('I am hungry')">🍎 I am hungry</button>
+            </div>
+          </div>
+
+          <div class="coach-side-card">
+            <h4>Motivation</h4>
+            <div class="prompt-group">
+              <button onclick="useQuickPrompt('Give me motivation')">🔥 Motivation</button>
+              <button onclick="useQuickPrompt('Give me a reward idea')">🏆 Reward idea</button>
+              <button onclick="useQuickPrompt('Help me focus')">🧘 Help me focus</button>
+              <button onclick="useQuickPrompt('I keep procrastinating')">⏳ Procrastinating</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CHAT PANEL -->
+        <div class="chat-card big-chat-card">
+
+          <div class="coach-header">
+            <div class="coach-avatar">🧠</div>
+            <div>
+              <h3>BrainBreak Coach</h3>
+              <p>Your study and burnout-prevention buddy</p>
+            </div>
+          </div>
+
+          <div id="chatMessages" class="chat-messages">
+            <div class="bot-message">
+              <strong>Hi! I’m BrainBreak Coach.</strong><br><br>
+              I can help you:
+              <ul>
+                <li>decide what to work on first</li>
+                <li>choose a healthy break</li>
+                <li>avoid screen overload</li>
+                <li>get unstuck when you feel tired or stressed</li>
+                <li>create a simple study plan</li>
+              </ul>
+              Try one of the prompt buttons on the left, or type your own question below.
+            </div>
+          </div>
+
+          <div class="chat-input-row">
+            <input
+              type="text"
+              id="chatInput"
+              placeholder="Example: I feel tired and have math homework..."
+              onkeydown="handleChatKey(event)"
+            />
+            <button onclick="sendFakeChatMessage()">Send</button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+<!-- PROFILE & SETTINGS SECTION -->
+<section id="settings" class="page-section">
+  <h1>Profile & Settings</h1>
+  <p>
+    Sign in locally, save your profile, store your classes, set your study preferences,
+    and customize how BrainBreak looks.
+  </p>
+
+  <div class="settings-grid">
+
+    <!-- SIGN IN CARD -->
+    <div class="settings-card">
+      <h2>Sign In</h2>
+      <p class="small-text">
+        Enter your email to personalize BrainBreak on this device.
+      </p>
+
+      <label>Email</label>
+      <input type="email" id="userEmail" placeholder="example@email.com" />
+
+      <div class="settings-button-row">
+        <button onclick="localSignIn()">Sign In</button>
+        <button onclick="localSignOut()">Sign Out</button>
+      </div>
+
+      <div id="signInStatus" class="settings-summary">
+        <p>Not signed in yet.</p>
+      </div>
+    </div>
+
+    <!-- STUDENT PROFILE CARD -->
+    <div class="settings-card">
+      <h2>Student Profile</h2>
+
+      <label>Your Name</label>
+      <input type="text" id="studentName" placeholder="Example: Nishtha" />
+
+      <label>Grade Level</label>
+      <select id="gradeLevel">
+        <option value="Middle School">Middle School</option>
+        <option value="9th Grade">9th Grade</option>
+        <option value="10th Grade">10th Grade</option>
+        <option value="11th Grade">11th Grade</option>
+        <option value="12th Grade">12th Grade</option>
+        <option value="College">College</option>
+      </select>
+
+      <label>Study Goal</label>
+      <input type="text" id="studyGoal" placeholder="Example: Finish homework without burning out" />
+
+      <button onclick="saveProfile()">Save Profile</button>
+
+      <div id="profileSummary" class="settings-summary">
+        <p>No profile saved yet.</p>
+      </div>
+    </div>
+
+    <!-- SAVED CLASSES CARD -->
+    <div class="settings-card">
+      <h2>Saved Classes</h2>
+
+      <label>Add a Class</label>
+      <input type="text" id="classNameInput" placeholder="Example: Chemistry" />
+
+      <button onclick="addClass()">Add Class</button>
+
+      <div id="classList" class="settings-summary">
+        <p>No classes saved yet.</p>
+      </div>
+    </div>
+
+    <!-- STUDY PREFERENCES CARD -->
+    <div class="settings-card">
+      <h2>Study Preferences</h2>
+
+      <label>Preferred Focus Length</label>
+      <select id="preferredFocus">
+        <option value="15">15 minutes</option>
+        <option value="20">20 minutes</option>
+        <option value="25">25 minutes</option>
+        <option value="30">30 minutes</option>
+        <option value="45">45 minutes</option>
+      </select>
+
+      <label>Preferred Break Length</label>
+      <select id="preferredBreak">
+        <option value="3">3 minutes</option>
+        <option value="5">5 minutes</option>
+        <option value="7">7 minutes</option>
+        <option value="10">10 minutes</option>
+        <option value="15">15 minutes</option>
+      </select>
+
+      <label>Study Style</label>
+      <select id="studyStyle">
+        <option value="Balanced">Balanced</option>
+        <option value="Intense Focus">Intense Focus</option>
+        <option value="Gentle Start">Gentle Start</option>
+        <option value="Frequent Breaks">Frequent Breaks</option>
+      </select>
+
+      <button onclick="saveStudySettings()">Save Study Settings</button>
+
+      <div id="studySettingsSummary" class="settings-summary">
+        <p>No study settings saved yet.</p>
+      </div>
+    </div>
+
+    <!-- THEME CARD -->
+    <div class="settings-card theme-settings-card">
+      <h2>Theme</h2>
+      <p>Choose how BrainBreak looks.</p>
+
+      <div class="theme-buttons">
+        <button onclick="changeTheme('calm-blue')">Calm Blue</button>
+        <button onclick="changeTheme('lavender')">Lavender</button>
+        <button onclick="changeTheme('mint')">Mint</button>
+        <button onclick="changeTheme('sunset')">Sunset</button>
+        <button onclick="changeTheme('dark')">Dark Mode</button>
+      </div>
+
+      <div class="settings-summary">
+        <p id="currentThemeText">Current theme: Calm Blue</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+<script src="script.js"></script>
+
+  <!-- BrainBreak Coach Logic -->
+  <script>
+    function sendFakeChatMessage() {
+      const chatInput = document.getElementById("chatInput");
+      const chatMessages = document.getElementById("chatMessages");
+
+      if (!chatInput || !chatMessages) {
+        alert("Chat box was not found.");
+        return;
+      }
+
+      const message = chatInput.value.trim();
+
+      if (message === "") {
+        alert("Please type a message first.");
+        return;
+      }
+
+      chatMessages.innerHTML += `
+        <div class="user-message">${message}</div>
+      `;
+
+      chatInput.value = "";
+
+      const reply = generateCoachReply(message);
+
+      setTimeout(function() {
+        chatMessages.innerHTML += `
+          <div class="bot-message">${reply}</div>
+        `;
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 300);
+
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function generateCoachReply(message) {
+      const lowerMessage = message.toLowerCase();
+
+      if (
+        lowerMessage.includes("tired") ||
+        lowerMessage.includes("sleepy") ||
+        lowerMessage.includes("exhausted")
+      ) {
+        return `
+          You sound mentally drained, so your goal should be to reset first, not force yourself harder.
+          <div class="coach-tip">
+            <strong>Try this:</strong> Take a 5-minute break. Drink water, stretch, and rest your eyes.
+          </div>
+          After that, come back and start with your easiest task for only 10 minutes.
+        `;
+      }
+
+      if (
+        lowerMessage.includes("stress") ||
+        lowerMessage.includes("stressed") ||
+        lowerMessage.includes("overwhelmed") ||
+        lowerMessage.includes("too much")
+      ) {
+        return `
+          When everything feels like too much, do not try to solve everything at once.
+          <div class="coach-tip">
+            <strong>Try this:</strong> Choose one task only. Then do just the first small step.
+          </div>
+          Momentum matters more than perfection right now.
+        `;
+      }
+
+      if (
+        lowerMessage.includes("unmotivated") ||
+        lowerMessage.includes("motivation") ||
+        lowerMessage.includes("motivated")
+      ) {
+        return `
+          Motivation usually comes <strong>after</strong> you begin, not before.
+          <div class="coach-tip">
+            <strong>Try this:</strong> Work for just 8–10 minutes. Make the starting step super small.
+          </div>
+          Once you begin, it often feels easier to keep going.
+        `;
+      }
+
+      if (
+        lowerMessage.includes("what should i do first") ||
+        lowerMessage.includes("do first") ||
+        lowerMessage.includes("start") ||
+        lowerMessage.includes("help me start")
+      ) {
+        if (typeof tasks !== "undefined" && tasks.length > 0) {
+          const priorityOrder = {
+            High: 1,
+            Medium: 2,
+            Low: 3
+          };
+
+          const sortedTasks = [...tasks].sort(function(a, b) {
+            return priorityOrder[a.priority] - priorityOrder[b.priority];
+          });
+
+          const firstTask = sortedTasks[0];
+
+          return `
+            Based on your task list, I would start with:
+            <div class="coach-tip">
+              <strong>${firstTask.name}</strong><br>
+              Priority: ${firstTask.priority}<br>
+              Estimated time: ${firstTask.minutes || "Not entered"} minutes
+            </div>
+            Start with 10 focused minutes. You do not need to finish the whole thing at once.
+          `;
+        }
+
+        return `
+          Start with the task that is most urgent or highest priority.
+          <div class="coach-tip">
+            <strong>Try this:</strong> Work for only 10 minutes first. You do not need to finish the whole assignment immediately.
+          </div>
+        `;
+      }
+
+      if (
+        lowerMessage.includes("study plan") ||
+        lowerMessage.includes("plan") ||
+        lowerMessage.includes("homework")
+      ) {
+        return `
+          Here is a simple study plan:
+          <div class="coach-tip">
+            <strong>1.</strong> Start with your highest-priority or most urgent task.<br>
+            <strong>2.</strong> Work for 25 minutes.<br>
+            <strong>3.</strong> Take a 5-minute break.<br>
+            <strong>4.</strong> Continue with the next task.<br>
+            <strong>5.</strong> Save the easiest task for the end.
+          </div>
+          This helps you avoid feeling stuck before you even begin.
+        `;
+      }
+
+      if (
+        lowerMessage.includes("hungry") ||
+        lowerMessage.includes("snack") ||
+        lowerMessage.includes("food")
+      ) {
+        return `
+          If you are hungry, your brain may struggle to focus.
+          <div class="coach-tip">
+            <strong>Suggestion:</strong> Take a short snack and water break.
+          </div>
+          Keep it quick so it refreshes you without turning into procrastination.
+        `;
+      }
+
+      if (
+        lowerMessage.includes("short break")
+      ) {
+        return `
+          A short break is best when you need a fast reset.
+          <div class="coach-tip">
+            <strong>Suggested short break:</strong> Stand up, stretch, drink water, and look away from your screen for 3–5 minutes.
+          </div>
+        `;
+      }
+
+      if (
+        lowerMessage.includes("fun break")
+      ) {
+        return `
+          A fun break can boost your mood if it stays short.
+          <div class="coach-tip">
+            <strong>Suggested fun break:</strong> Listen to one song, draw something quick, walk outside, or do a mini activity you enjoy.
+          </div>
+        `;
+      }
+
+      if (
+        lowerMessage.includes("online break") ||
+        lowerMessage.includes("screen") ||
+        lowerMessage.includes("phone") ||
+        lowerMessage.includes("youtube") ||
+        lowerMessage.includes("tiktok")
+      ) {
+        return `
+          Online breaks depend on what kind of assignment you were doing.
+          <div class="coach-tip">
+            <strong>Rule:</strong> If your work is already online, an online break is usually not recommended because your eyes and brain need a screen break.
+          </div>
+          If your assignment is on paper, then a short online break can be okay with a timer.
+        `;
+      }
+
+      if (
+        lowerMessage.includes("procrastinating") ||
+        lowerMessage.includes("procrastinate") ||
+        lowerMessage.includes("focus") ||
+        lowerMessage.includes("can't focus") ||
+        lowerMessage.includes("cannot focus")
+      ) {
+        return `
+          When you procrastinate, make the next step smaller.
+          <div class="coach-tip">
+            <strong>Try this:</strong> Set a 10-minute timer and only work on the first step.
+          </div>
+          The goal is to begin, not to feel perfect first.
+        `;
+      }
+
+      if (
+        lowerMessage.includes("reward")
+      ) {
+        return `
+          Rewards work best when they are simple and planned ahead of time.
+          <div class="coach-tip">
+            <strong>Reward idea:</strong> After 2 focus sessions, give yourself a snack, one song, time outside, or another favorite activity.
+          </div>
+        `;
+      }
+
+      if (
+        lowerMessage.includes("break") ||
+        lowerMessage.includes("rest") ||
+        lowerMessage.includes("pause")
+      ) {
+        return `
+          A short break can help you come back with more focus.
+          <div class="coach-tip">
+            <strong>Suggested break:</strong> Stand up, stretch, drink water, and take your eyes off screens for a few minutes.
+          </div>
+          Keep it short and intentional.
+        `;
+      }
+
+      return `
+        I can help with planning tasks, choosing breaks, avoiding burnout, handling stress, and staying motivated.
+        <div class="coach-tip">
+          Try clicking one of the prompt buttons on the left, or ask: <strong>"What should I do first?"</strong>
+        </div>
+      `;
+    }
+
+    function useQuickPrompt(promptText) {
+      const chatInput = document.getElementById("chatInput");
+
+      if (!chatInput) {
+        alert("Chat input was not found.");
+        return;
+      }
+
+      chatInput.value = promptText;
+      sendFakeChatMessage();
+    }
+
+    function handleChatKey(event) {
+      if (event.key === "Enter") {
+        sendFakeChatMessage();
+      }
+    }
+  </script>
+  <!-- TO-DO LIST SECTION -->
+<section id="todo" class="page-section">
+  <h1>To-Do List</h1>
+  <p>
+    Create a quick checklist for smaller tasks, reminders, or steps inside a larger assignment.
+  </p>
+
+  <div class="form-card">
+    <label>To-Do Item</label>
+    <input
+      type="text"
+      id="todoInput"
+      placeholder="Example: Finish math questions 1–10"
+      onkeydown="handleTodoEnter(event)"
+    />
+
+    <button onclick="addTodoItem()">Add To-Do</button>
+  </div>
+
+  <div id="todoList" class="list-card">
+    <h3>Your To-Do List</h3>
+    <p>No to-do items added yet.</p>
+  </div>
+</section>
+
+  </main>
+
+  
+
+</body>
+</html>
