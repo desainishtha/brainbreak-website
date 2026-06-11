@@ -26,6 +26,9 @@ function showSection(sectionId) {
 ----------------------------- */
 
 function addTask() {
+    if (!requireSignInForPlanning()) {
+  return;
+}
   const name = document.getElementById("taskName").value;
   const className = document.getElementById("taskClass").value;
   const minutes = document.getElementById("taskMinutes").value;
@@ -816,6 +819,7 @@ function localSignOut() {
 function displaySignInStatus() {
   const statusBox = document.getElementById("signInStatus");
   const emailInput = document.getElementById("userEmail");
+  const navbarUser = document.getElementById("navbarUser");
 
   if (!statusBox) {
     return;
@@ -830,6 +834,10 @@ function displaySignInStatus() {
       emailInput.value = "";
     }
 
+    if (navbarUser) {
+      navbarUser.textContent = "Not signed in";
+    }
+
     return;
   }
 
@@ -840,8 +848,11 @@ function displaySignInStatus() {
   if (emailInput) {
     emailInput.value = savedEmail;
   }
-}
 
+  if (navbarUser) {
+    navbarUser.textContent = "Signed in: " + savedEmail;
+  }
+}
 /* Student Profile */
 
 function saveProfile() {
@@ -1182,4 +1193,30 @@ function setupEnterKeyShortcuts() {
       }
     });
   }
+}
+/* -----------------------------
+   Start Planning Sign-In Gate
+----------------------------- */
+
+function startPlanning() {
+  const savedEmail = localStorage.getItem("brainBreakSignedInEmail");
+
+  if (!savedEmail) {
+    alert("Please sign in first before starting your plan.");
+    showSection("settings");
+    return;
+  }
+
+  showSection("tasks");
+}
+function requireSignInForPlanning() {
+  const savedEmail = localStorage.getItem("brainBreakSignedInEmail");
+
+  if (!savedEmail) {
+    alert("Please sign in first to use planning features.");
+    showSection("settings");
+    return false;
+  }
+
+  return true;
 }
