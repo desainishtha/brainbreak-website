@@ -4,7 +4,12 @@ let breakActivities = [];
 let timerInterval;
 let timeLeft = 25 * 60;
 
+let timerEndTime = null;
+let timerPaused = true;
+let timerRunning = false;
+
 let currentFocusTask = null;
+let currentFocusMinutes = 25;
 let currentBreakMinutes = 5;
 
 /* -----------------------------
@@ -12,6 +17,15 @@ let currentBreakMinutes = 5;
 ----------------------------- */
 
 function showSection(sectionId) {
+  const savedEmail = localStorage.getItem("brainBreakSignedInEmail");
+
+  const publicSections = ["home", "settings"];
+
+  if (!savedEmail && !publicSections.includes(sectionId)) {
+    alert("Please sign in first to access this page.");
+    sectionId = "settings";
+  }
+
   const sections = document.querySelectorAll(".page-section");
 
   sections.forEach(function(section) {
@@ -233,6 +247,8 @@ function prepareFocusSession() {
     return;
   }
 
+  clearInterval(timerInterval);
+
   currentFocusTask = sortedTasks[0];
 
   const estimatedMinutes = Number(currentFocusTask.minutes) || 25;
@@ -270,8 +286,13 @@ function prepareFocusSession() {
     }
   }
 
-  timeLeft = focusMinutes * 60;
+  currentFocusMinutes = focusMinutes;
   currentBreakMinutes = breakMinutes;
+  timeLeft = focusMinutes * 60;
+
+  timerEndTime = null;
+  timerPaused = true;
+  timerRunning = false;
 
   updateTimerDisplay();
 
@@ -292,7 +313,7 @@ function prepareFocusSession() {
 }
 
 function startTimer() {
-  if (!currentFocusTask && tasks.length > 0) {
+  if (!currentFocusTask) {
     prepareFocusSession();
   }
 
@@ -303,32 +324,91 @@ function startTimer() {
 
   clearInterval(timerInterval);
 
-  timerInterval = setInterval(function() {
-    timeLeft = timeLeft - 1;
-    updateTimerDisplay();
+  timerEndTime = Date.now() + timeLeft * 1000;
+  timerPaused = false;
+  timerRunning = true;
 
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      alert("Time for a BrainBreak!");
-      suggestBreak();
-    }
-  }, 1000);
+  timerInterval = setInterval(updateTimerFromClock, 250);
+  updateTimerFromClock();
+}
+
+function pauseTimer() {
+  if (!timerRunning || timerPaused) {
+    return;
+  }
+
+  timeLeft = Math.max(0, Math.ceil((timerEndTime - Date.now()) / 1000));
+
+  clearInterval(timerInterval);
+
+  timerPaused = true;
+  timerRunning = false;
+
+  updateTimerDisplay();
+}
+
+function resumeTimer() {
+  if (!currentFocusTask) {
+    alert("Please prepare a focus session first.");
+    return;
+  }
+
+  if (timeLeft <= 0) {
+    alert("This timer is already finished. Reset or prepare a new session.");
+    return;
+  }
+
+  clearInterval(timerInterval);
+
+  timerEndTime = Date.now() + timeLeft * 1000;
+  timerPaused = false;
+  timerRunning = true;
+
+  timerInterval = setInterval(updateTimerFromClock, 250);
+  updateTimerFromClock();
 }
 
 function resetTimer() {
   clearInterval(timerInterval);
 
+  timerPaused = true;
+  timerRunning = false;
+  timerEndTime = null;
+
   if (currentFocusTask) {
-    prepareFocusSession();
+    timeLeft = currentFocusMinutes * 60;
   } else {
     timeLeft = 25 * 60;
-    updateTimerDisplay();
   }
+
+  updateTimerDisplay();
 
   document.getElementById("breakSuggestion").innerHTML = `
     <h3>Break Suggestion</h3>
     <p>Your suggested break will appear here.</p>
   `;
+}
+
+function updateTimerFromClock() {
+  if (!timerEndTime) {
+    return;
+  }
+
+  timeLeft = Math.max(0, Math.ceil((timerEndTime - Date.now()) / 1000));
+  updateTimerDisplay();
+
+  if (timeLeft <= 0) {
+    clearInterval(timerInterval);
+
+    timerPaused = true;
+    timerRunning = false;
+    timerEndTime = null;
+
+    updateTimerDisplay();
+    playAlarmSound();
+    showTimerFinishedMessage();
+    suggestBreak();
+  }
 }
 
 function updateTimerDisplay() {
@@ -342,6 +422,40 @@ function updateTimerDisplay() {
   }
 
   document.getElementById("timerDisplay").textContent = minutes + ":" + secondsText;
+}
+
+function showTimerFinishedMessage() {
+  alert("Time for a BrainBreak!");
+}
+
+function playAlarmSound() {
+  const audioContext = new AudioContext();
+
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  oscillator.type = "sine";
+  oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
+
+  gainNode.gain.setValueAtTime(0.8, audioContext.currentTime);
+
+  oscillator.start();
+
+  setTimeout(function() {
+    oscillator.frequency.setValueAtTime(660, audioContext.currentTime);
+  }, 250);
+
+  setTimeout(function() {
+    oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
+  }, 500);
+
+  setTimeout(function() {
+    oscillator.stop();
+    audioContext.close();
+  }, 1200);
 }
 
 function suggestBreak() {
@@ -358,7 +472,6 @@ function suggestBreak() {
     <span class="break-length-badge">${currentBreakMinutes}-minute break</span>
   `;
 }
-
 function getBreakBasedOnAssignmentType() {
   if (!currentFocusTask) {
     return "Stand up, stretch, drink water, and rest your eyes.";
@@ -790,6 +903,43 @@ function escapeHTML(text) {
 ----------------------------- */
 
 let savedClasses = [];
+function getSignedInEmail() {
+  return localStorage.getItem("brainBreakSignedInEmail");
+}
+
+function getTasksKey() {
+  return "brainBreakTasks_" + getSignedInEmail();
+}
+
+function saveTasks() {
+  const savedEmail = getSignedInEmail();
+
+  if (!savedEmail) {
+    return;
+  }
+
+  localStorage.setItem(getTasksKey(), JSON.stringify(tasks));
+}
+
+function loadTasks() {
+  const savedEmail = getSignedInEmail();
+
+  if (!savedEmail) {
+    tasks = [];
+    displayTasks();
+    return;
+  }
+
+  const savedTasks = localStorage.getItem(getTasksKey());
+
+  if (savedTasks) {
+    tasks = JSON.parse(savedTasks);
+  } else {
+    tasks = [];
+  }
+
+  displayTasks();
+}
 
 /* Local Email Sign-In */
 
